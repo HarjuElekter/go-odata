@@ -1,2 +1,14 @@
+github.com/HarjuElekter/go-models v0.6.0 h1:qwG0K5cDB/HYmcW7v0lcHA1TyYLlno2orHYRhM0b+Ck=
+github.com/HarjuElekter/go-models v0.6.0/go.mod h1:8RFnONMiLd1nFjPEJL+z87CFIDd1LDH4fzdPqKGwC/I=
+github.com/HarjuElekter/go-utils v0.1.0 h1:SLg/6iA8H4SwfMl8I7O57vMm/QRi/Oz40cDV8tdno1M=
+github.com/HarjuElekter/go-utils v0.1.0/go.mod h1:V7c/IDzrL+PT5fq21q0Q/jH1Uf/ly/xpH4R+5STxVW4=
 github.com/dainiauskas/go-log v1.2.9 h1:HoCE/XsnHgiogrYVMalE421fq3P/wNpc95z6ITJ8xyc=
 github.com/dainiauskas/go-log v1.2.9/go.mod h1:WpzJ9hmBadYLTRGkkw7kOX7H6WvKq0mNSKTcbak75mA=
+github.com/dainiauskas/go-types v0.2.0 h1:JynLjl5KVmfqhzeTrehHUc9RB2MKq7X0yEAZqMhE4Is=
+github.com/dainiauskas/go-types v0.2.0/go.mod h1:BIgjyi0n9+lZwyQqmvrTZ5AlB/2LyZy0XvRferfMJoY=
+github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=
+github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
+github.com/jinzhu/now v1.1.5 h1:/o9tlHleP7gOFmsnYNz3RGnqzefHA47wQpKrrdTIwXQ=
+github.com/jinzhu/now v1.1.5/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
+gorm.io/gorm v1.25.5 h1:zR9lOiiYf09VNh5Q1gphfyia1JpiClIWG9hQaxB/mls=
+gorm.io/gorm v1.25.5/go.mod h1:hbnx/Oo0ChWMn1BIhpy1oYozzpM15i4YPuHDmfYtwg8=
