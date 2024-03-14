@@ -99,7 +99,12 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode != 201 {
+	codes := map[int]bool{
+		200: true,
+		201: true,
+	}
+
+	if !codes[resp.StatusCode] {
 		return nil, errors.New(resp.Status)
 	}
 	defer resp.Body.Close()
