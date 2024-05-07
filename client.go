@@ -11,6 +11,10 @@ import (
 	"github.com/dainiauskas/go-log"
 )
 
+var (
+	MaxIdleConnsPerHost = 1
+)
+
 type Client struct {
 	baseURL string
 	auth    *BaseAuthorization
@@ -48,7 +52,8 @@ func (c *Client) GetByURL() ([]byte, http.Header, error) {
 func (c *Client) PostAPI(data interface{}) ([]byte, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 		},
 	}
 
@@ -81,7 +86,8 @@ func (c *Client) PostAPI(data interface{}) ([]byte, error) {
 func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 		},
 	}
 
@@ -115,7 +121,8 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 func (c *Client) DeleteFromURL(url string) error {
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 		},
 	}
 
@@ -145,7 +152,8 @@ func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 		},
 	}
 
