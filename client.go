@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"syscall"
 	"time"
 
 	"github.com/dainiauskas/go-log"
@@ -124,12 +125,14 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 }
 
 func (c *Client) DeleteFromURL(url string) error {
+	var resp *http.Response
+
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
+			IdleConnTimeout:     time.Millisecond * 500,
 		},
 	}
 
@@ -142,14 +145,26 @@ func (c *Client) DeleteFromURL(url string) error {
 
 	req.SetBasicAuth(c.auth.Name, c.auth.Password)
 
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
+	for i := 0; i < 100; i++ {
+		var err error
+
+		resp, err = client.Do(req)
+		if err != nil {
+			if errors.Is(err, syscall.ECONNRESET) {
+				continue
+			}
+
+			return err
+		}
+
+		break
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
 		return errors.New(resp.Status)
 	}
+
+	time.Sleep(time.Millisecond * 200)
 
 	return nil
 }
