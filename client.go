@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/dainiauskas/go-log"
 )
@@ -55,6 +56,7 @@ func (c *Client) PostAPI(data interface{}) ([]byte, error) {
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
 
@@ -90,6 +92,7 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
 
@@ -126,6 +129,7 @@ func (c *Client) DeleteFromURL(url string) error {
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
 
@@ -158,6 +162,7 @@ func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
 
