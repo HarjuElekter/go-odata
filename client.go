@@ -157,7 +157,7 @@ func (c *Client) DeleteFromURL(url string) error {
 			return err
 		}
 
-		if resp.StatusCode == http.StatusNotFound {
+		if resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusInternalServerError {
 			return nil
 		}
 
