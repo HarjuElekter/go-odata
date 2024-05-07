@@ -132,7 +132,7 @@ func (c *Client) DeleteFromURL(url string) error {
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
 			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 500,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
 
@@ -157,14 +157,18 @@ func (c *Client) DeleteFromURL(url string) error {
 			return err
 		}
 
-		break
-	}
+		if resp.StatusCode == http.StatusNotFound {
+			return nil
+		}
 
-	if resp.StatusCode != http.StatusNoContent {
-		return errors.New(resp.Status)
-	}
+		if resp.StatusCode != http.StatusNoContent {
+			return errors.New(resp.Status)
+		}
 
-	time.Sleep(time.Millisecond * 200)
+		time.Sleep(time.Millisecond * 200)
+
+		return nil
+	}
 
 	return nil
 }
