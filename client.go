@@ -54,6 +54,7 @@ func (c *Client) PostAPI(data interface{}) ([]byte, error) {
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
 		},
 	}
 
@@ -88,6 +89,7 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
 		},
 	}
 
@@ -123,6 +125,7 @@ func (c *Client) DeleteFromURL(url string) error {
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
 		},
 	}
 
@@ -154,6 +157,7 @@ func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
 		},
 	}
 
