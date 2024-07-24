@@ -95,8 +95,13 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, errors.New(resp.Status)
+	codes := map[int]bool{
+		200: true,
+		201: true,
+	}
+
+	if !codes[resp.StatusCode] {
+		return nil, errors.New(http.StatusText(resp.StatusCode))
 	}
 	defer resp.Body.Close()
 
