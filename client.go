@@ -52,10 +52,22 @@ func (c *Client) GetByURL() ([]byte, http.Header, error) {
 }
 
 func (c *Client) PostAPI(data any) ([]byte, error) {
-	return c.PostAPIFromURL(c.baseURL, data)
+	return c.do(c.baseURL, http.MethodPost, data)
 }
 
-func (c *Client) PostAPIFromURL(u string, data any) ([]byte, error) {
+func (c *Client) PostAPIByURL(u string, data any) ([]byte, error) {
+	return c.do(u, http.MethodPost, data)
+}
+
+func (c *Client) PatchAPI(data any) ([]byte, error) {
+	return c.do(c.baseURL, http.MethodPatch, data)
+}
+
+func (c *Client) PatchAPIByURL(u string, data any) ([]byte, error) {
+	return c.do(u, http.MethodPatch, data)
+}
+
+func (c *Client) do(u, m string, data any) ([]byte, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
@@ -70,7 +82,7 @@ func (c *Client) PostAPIFromURL(u string, data any) ([]byte, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(b))
+	req, err := http.NewRequest(m, u, bytes.NewBuffer(b))
 	if err != nil {
 		return nil, err
 	}
