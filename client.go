@@ -67,6 +67,14 @@ func (c *Client) PatchAPIByURL(u string, data any) ([]byte, error) {
 	return c.do(u, http.MethodPatch, data)
 }
 
+func (c *Client) PutAPI(data any) ([]byte, error) {
+	return c.do(c.baseURL, http.MethodPut, data)
+}
+
+func (c *Client) PutAPIByURL(u string, data any) ([]byte, error) {
+	return c.do(u, http.MethodPut, data)
+}
+
 func (c *Client) do(u, m string, data any) ([]byte, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
