@@ -51,7 +51,11 @@ func (c *Client) GetByURL() ([]byte, http.Header, error) {
 	return c.GetFromURL(c.baseURL)
 }
 
-func (c *Client) PostAPI(data interface{}) ([]byte, error) {
+func (c *Client) PostAPI(data any) ([]byte, error) {
+	return c.PostAPIFromURL(c.baseURL, data)
+}
+
+func (c *Client) PostAPIFromURL(u string, data any) ([]byte, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
@@ -66,7 +70,7 @@ func (c *Client) PostAPI(data interface{}) ([]byte, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, c.baseURL, bytes.NewBuffer(b))
+	req, err := http.NewRequest(http.MethodPost, u, bytes.NewBuffer(b))
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +161,7 @@ func (c *Client) DeleteFromURL(url string) error {
 			return err
 		}
 
-		if resp.StatusCode == http.StatusNotFound || resp.StatusCode == http.StatusInternalServerError {
+		if resp.StatusCode == http.StatusNotFound {
 			return nil
 		}
 
