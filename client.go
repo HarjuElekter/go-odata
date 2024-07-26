@@ -240,3 +240,35 @@ func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 
 	return b, resp.Header, err
 }
+
+func (c *Client) Delete(url string) (ok bool, err error) {
+	log.Trace("Delete: %s", url)
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
+		},
+	}
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return
+	}
+
+	req.Header.Add("If-Match", "*")
+
+	req.SetBasicAuth(c.auth.Name, c.auth.Password)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Error("client.Do error: %s", err)
+		return
+	}
+
+	ok = resp.StatusCode == http.StatusNoContent
+
+	return
+}
