@@ -253,7 +253,7 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 		},
 	}
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return
 	}
