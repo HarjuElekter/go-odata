@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"syscall"
@@ -267,6 +268,8 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 		log.Error("client.Do error: %s", err)
 		return
 	}
+
+	fmt.Println(resp.StatusCode, resp.Status)
 
 	ok = resp.StatusCode == http.StatusNoContent
 
