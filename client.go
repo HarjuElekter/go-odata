@@ -259,7 +259,7 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 		return
 	}
 
-	req.Header.Add("If-Match", "*")
+	// req.Header.Add("If-Match", "*")
 
 	req.SetBasicAuth(c.auth.Name, c.auth.Password)
 
