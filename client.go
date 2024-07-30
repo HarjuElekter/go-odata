@@ -98,6 +98,11 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+
+	if m == http.MethodPatch {
+		req.Header.Add("If-Match", "*")
+	}
+
 	req.SetBasicAuth(c.auth.Name, c.auth.Password)
 
 	resp, err := client.Do(req)
