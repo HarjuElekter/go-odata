@@ -5,10 +5,8 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
-	"syscall"
 	"time"
 
 	"github.com/dainiauskas/go-log"
@@ -77,6 +75,8 @@ func (c *Client) PutAPIByURL(u string, data any) ([]byte, error) {
 }
 
 func (c *Client) do(u, m string, data any) ([]byte, error) {
+	log.Trace("DO %s to URL: %s", m, u)
+
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
@@ -93,6 +93,7 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 
 	req, err := http.NewRequest(m, u, bytes.NewBuffer(b))
 	if err != nil {
+		log.Error("Request error: %s", err)
 		return nil, err
 	}
 
@@ -101,6 +102,7 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		log.Error("do error: %s", err)
 		return nil, err
 	}
 
@@ -108,6 +110,8 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 		200: true,
 		201: true,
 	}
+
+	log.Trace("do response status: %d %s", resp.StatusCode, resp.Status)
 
 	if !codes[resp.StatusCode] {
 		return nil, errors.New(http.StatusText(resp.StatusCode))
@@ -155,52 +159,8 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 }
 
 func (c *Client) DeleteFromURL(url string) error {
-	var resp *http.Response
-
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
-			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
-		},
-	}
-
-	req, err := http.NewRequest(http.MethodDelete, url, nil)
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("If-Match", "*")
-
-	req.SetBasicAuth(c.auth.Name, c.auth.Password)
-
-	for i := 0; i < 100; i++ {
-		var err error
-
-		resp, err = client.Do(req)
-		if err != nil {
-			if errors.Is(err, syscall.ECONNRESET) {
-				continue
-			}
-
-			return err
-		}
-
-		if resp.StatusCode == http.StatusNotFound {
-			return nil
-		}
-
-		if resp.StatusCode != http.StatusNoContent {
-			return errors.New(resp.Status)
-		}
-
-		time.Sleep(time.Millisecond * 200)
-
-		return nil
-	}
-
-	return nil
+	_, err := c.Delete(url)
+	return err
 }
 
 func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
@@ -259,7 +219,7 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 		return
 	}
 
-	// req.Header.Add("If-Match", "*")
+	req.Header.Add("If-Match", "*")
 
 	req.SetBasicAuth(c.auth.Name, c.auth.Password)
 
@@ -268,8 +228,6 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 		log.Error("client.Do error: %s", err)
 		return
 	}
-
-	fmt.Println(resp.StatusCode, resp.Status)
 
 	ok = resp.StatusCode == http.StatusNoContent
 
