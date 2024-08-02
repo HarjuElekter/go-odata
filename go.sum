@@ -1,2 +1,6 @@
+github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 h1:mFRzDkZVAjdal+s7s0MwaRv9igoPqLRdzOLzw/8Xvq8=
+github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358/go.mod h1:chxPXzSsl7ZWRAuOIE23GDNzjWuZquvFlgA8xmpunjU=
 github.com/dainiauskas/go-log v1.2.9 h1:HoCE/XsnHgiogrYVMalE421fq3P/wNpc95z6ITJ8xyc=
 github.com/dainiauskas/go-log v1.2.9/go.mod h1:WpzJ9hmBadYLTRGkkw7kOX7H6WvKq0mNSKTcbak75mA=
+golang.org/x/crypto v0.25.0 h1:ypSNr+bnYL2YhwoMt2zPxHFmbAN1KZs/njMG3hxUp30=
+golang.org/x/crypto v0.25.0/go.mod h1:T+wALwcMOSE0kXgUAnPAHqTLW+XHgcELELW8VaDgm/M=

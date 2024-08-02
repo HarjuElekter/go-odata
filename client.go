@@ -2,13 +2,12 @@ package odata
 
 import (
 	"bytes"
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
-	"time"
 
+	"github.com/Azure/go-ntlmssp"
 	"github.com/dainiauskas/go-log"
 )
 
@@ -30,16 +29,16 @@ func (c *Client) SetBaseURL(url string) {
 	c.baseURL = url
 }
 
-func (c *Client) GetURL() string {
-	return c.baseURL
-}
-
 func (c *Client) SetBaseCredentials(cred *BaseAuthorization) {
 	c.auth = cred
 }
 
 func (c *Client) SetHeaders(h http.Header) {
 	c.header = h
+}
+
+func (c *Client) GetURL() string {
+	return c.baseURL
 }
 
 func (c *Client) Get(method string) ([]byte, http.Header, error) {
@@ -77,14 +76,7 @@ func (c *Client) PutAPIByURL(u string, data any) ([]byte, error) {
 func (c *Client) do(u, m string, data any) ([]byte, error) {
 	log.Trace("DO %s to URL: %s", m, u)
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
-			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
-		},
-	}
+	client := c.client()
 
 	b, err := json.Marshal(data)
 	if err != nil {
@@ -127,14 +119,7 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 }
 
 func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
-			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
-		},
-	}
+	client := c.client()
 
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(b))
 	if err != nil {
@@ -171,14 +156,7 @@ func (c *Client) DeleteFromURL(url string) error {
 func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 	log.Trace("GetFromURL: %s", url)
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
-			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
-		},
-	}
+	client := c.client()
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -210,14 +188,7 @@ func (c *Client) GetFromURL(url string) ([]byte, http.Header, error) {
 func (c *Client) Delete(url string) (ok bool, err error) {
 	log.Trace("Delete: %s", url)
 
-	client := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
-			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
-			DisableKeepAlives:   true,
-			IdleConnTimeout:     time.Millisecond * 100,
-		},
-	}
+	client := c.client()
 
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
@@ -237,4 +208,13 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 	ok = resp.StatusCode == http.StatusNoContent
 
 	return
+}
+
+func (c *Client) client() *http.Client {
+	return &http.Client{
+		Transport: ntlmssp.Negotiator{
+			RoundTripper: &http.Transport{},
+		},
+	}
+
 }
