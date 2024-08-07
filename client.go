@@ -2,12 +2,13 @@ package odata
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
+	"time"
 
-	"github.com/Azure/go-ntlmssp"
 	"github.com/dainiauskas/go-log"
 )
 
@@ -211,10 +212,17 @@ func (c *Client) Delete(url string) (ok bool, err error) {
 }
 
 func (c *Client) client() *http.Client {
+	// return &http.Client{
+	// 	Transport: ntlmssp.Negotiator{
+	// 		RoundTripper: &http.Transport{},
+	// 	},
+	// }
 	return &http.Client{
-		Transport: ntlmssp.Negotiator{
-			RoundTripper: &http.Transport{},
+		Transport: &http.Transport{
+			TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
+			MaxIdleConnsPerHost: MaxIdleConnsPerHost,
+			DisableKeepAlives:   true,
+			IdleConnTimeout:     time.Millisecond * 100,
 		},
 	}
-
 }
