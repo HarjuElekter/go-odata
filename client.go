@@ -140,6 +140,7 @@ func (c *Client) PostFromURL(url string, b []byte) ([]byte, error) {
 	codes := map[int]bool{
 		200: true,
 		201: true,
+		204: true,
 	}
 
 	if !codes[resp.StatusCode] {
