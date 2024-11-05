@@ -107,6 +107,7 @@ func (c *Client) do(u, m string, data any) ([]byte, error) {
 	codes := map[int]bool{
 		200: true,
 		201: true,
+		204: true,
 	}
 
 	log.Trace("do response status: %d %s", resp.StatusCode, resp.Status)
